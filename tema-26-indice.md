@@ -44,7 +44,7 @@
    4.2.2. Instantáneas (snapshots) y seguimiento de bloques modificados (CBT)
    4.2.3. Replicación de máquinas virtuales y recuperación granular
 
-5. **Normativa y marco legal en la Administración Pública**
+5. **Normativa y marco legal en la Administración Pública (material complementario)**
    5.1. Esquema Nacional de Seguridad (ENS)
    5.1.1. Medidas relativas a copias de seguridad y continuidad de la información
    5.2. Protección de datos personales (RGPD y LOPDGDD)

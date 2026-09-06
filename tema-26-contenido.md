@@ -773,6 +773,8 @@ También conviene mencionar el **laboratorio aislado de verificación**: un ento
 
 ## 5. Normativa y marco legal en la Administración Pública
 
+> **Material complementario.** El enunciado oficial de este tema no nombra este apartado. Se mantiene porque sitúa la materia en el Ayuntamiento y en la normativa que le aplica, pero lo exigible es lo que enumera el título del tema.
+
 En una empresa privada, la política de copias es una decisión de gestión del riesgo. En una Administración pública **es una obligación jurídica**, y de dos órdenes distintos que conviene no mezclar: el **ENS**, que impone medidas de seguridad a los sistemas que soportan servicios públicos, y la **normativa de protección de datos**, que protege a las personas cuyos datos se tratan. A ellas se suma la normativa de **conservación del documento electrónico** (Ley 39/2015 y ENI), que obliga a que el expediente siga siendo accesible y auténtico mucho después de que el sistema que lo creó haya sido sustituido.
 
 ### 5.1. Esquema Nacional de Seguridad (ENS)
