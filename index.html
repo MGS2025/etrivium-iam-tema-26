@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tema 26 v1.0 — ETRIVIUM IAM</title>
+<title>Tema 26 v1.1 — ETRIVIUM IAM</title>
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--azul:#0055a0;--azul-dark:#003d73;--azul-deep:#002a52;--azul-light:#e8f0f8;--azul-05:rgba(0,85,160,.05);--azul-10:rgba(0,85,160,.10);--verde:#2d8659;--verde-bg:#e8f5ee;--rojo:#d13c3c;--rojo-bg:#fbeeed;--amber:#e89822;--amber-bg:#fdf4e4;--g100:#f5f7fa;--g200:#e8ecf0;--g300:#d1d7df;--g600:#4a5568;--g800:#2d3748;--font:'DM Sans',-apple-system,system-ui,sans-serif;--rad:8px;--sh:0 1px 3px rgba(0,0,0,.08);--shl:0 4px 16px rgba(0,0,0,.08)}
@@ -81,12 +81,12 @@ svg{max-width:100%;height:auto;display:block;margin:14px auto;background:#fff;bo
 </head>
 <body>
 <div class="wrap">
-<nav class="tabs"><button class="tab-btn active" data-tab="inicio">Inicio <span class='version-badge'>v1.0</span></button><button class="tab-btn" data-tab="contenido">Contenido</button><button class="tab-btn" data-tab="indice">Índice</button><button class="tab-btn" data-tab="diagramas">Diagramas</button><button class="tab-btn" data-tab="test">Test</button><button class="tab-btn" data-tab="casos">Casos</button><button class="tab-btn" data-tab="validacion">Validación</button><button class="tab-btn" data-tab="fuentes">Fuentes</button></nav>
+<nav class="tabs"><button class="tab-btn active" data-tab="inicio">Inicio <span class='version-badge'>v1.1</span></button><button class="tab-btn" data-tab="contenido">Contenido</button><button class="tab-btn" data-tab="indice">Índice</button><button class="tab-btn" data-tab="diagramas">Diagramas</button><button class="tab-btn" data-tab="test">Test</button><button class="tab-btn" data-tab="casos">Casos</button><button class="tab-btn" data-tab="validacion">Validación</button><button class="tab-btn" data-tab="fuentes">Fuentes</button></nav>
 <section id="tab-inicio" class="tab-content active"><div class="hero">
-  <span class="vbadge">v1.0</span>
+  <span class="vbadge">v1.1</span>
   <h1>Tema 26 — Almacenamiento, virtualización y copias de seguridad</h1>
   <div class="sub">DAS, SAN, NAS y objetos · RAID y optimización · SDS e hiperconvergencia · RTO/RPO y regla 3-2-1 · Backup de sistemas físicos y virtuales · ENS y RGPD</div>
-  <div class="banner"><strong>Parte II — Técnico · C1 Ayuntamiento de Madrid</strong> · Piloto v1.0 · 2026-08-20 · Pendiente de validación</div>
+  <div class="banner"><strong>Parte II — Técnico · C1 Ayuntamiento de Madrid</strong> · Piloto v1.1 · 2026-08-20 · Pendiente de validación</div>
 </div><!-- ficha-estudio:ini --><div class="ficha-estudio"><div class="fe-item"><span class="fe-k">Extensi&oacute;n</span><span class="fe-v">~18.500 palabras &middot; 14 diagramas &middot; 60 preguntas de test</span></div><div class="fe-item"><span class="fe-k">Tiempo estimado de estudio</span><span class="fe-v">16-18 horas <span class="fe-n">(primera vuelta completa, sin contar repasos)</span></span></div></div><!-- ficha-estudio:fin -->
 <h2>Qué incluye este tema</h2>
 <table><thead><tr><th>Entregable</th><th>Cantidad</th></tr></thead><tbody>
@@ -967,7 +967,7 @@ umount /mnt/snap &amp;&amp; lvremove -f /dev/vg_datos/snap_datos        # limpie
 <h2>7. Referencias cruzadas a otros temas</h2>
 <ul><li>[ ] Validadas contra BOAM 10.032 (T11, T12, T14, T25, T27, T28, T29, T30, T31, T32, T34, T35, T36, T37, T39)</li><li>[ ] Ninguna referencia cruzada cita un enunciado de tema incorrecto</li></ul>
 <h2>8. Calidad editorial</h2>
-<ul><li>[ ] Ortografía verificada (tildes y ñ) — sin diacríticos perdidos, también dentro de los <code>aria-label</code> de los SVG</li><li>[ ] Coherencia de versión (v1.0) en title, badges, banner y footer del <code>index.html</code></li><li>[ ] El <code>index.html</code> abre, navega entre las 8 pestañas y el motor de test funciona</li><li>[ ] Las listas anidadas del Contenido se muestran con sus niveles (sin aplanar)</li><li>[ ] Los bloques de código (<code>bash</code>, LVM, <code>tar</code>) se muestran correctamente formateados, sin markdown crudo</li></ul>
+<ul><li>[ ] Ortografía verificada (tildes y ñ) — sin diacríticos perdidos, también dentro de los <code>aria-label</code> de los SVG</li><li>[ ] Coherencia de versión (v1.1) en title, badges, banner y footer del <code>index.html</code></li><li>[ ] El <code>index.html</code> abre, navega entre las 8 pestañas y el motor de test funciona</li><li>[ ] Las listas anidadas del Contenido se muestran con sus niveles (sin aplanar)</li><li>[ ] Los bloques de código (<code>bash</code>, LVM, <code>tar</code>) se muestran correctamente formateados, sin markdown crudo</li></ul>
 <hr>
 <h2>Observaciones abiertas</h2>
 <p>_(Espacio para anotaciones de María, Ana y la revisión IAM.)_</p>
@@ -982,7 +982,7 @@ umount /mnt/snap &amp;&amp; lvremove -f /dev/vg_datos/snap_datos        # limpie
 <table><thead><tr><th>ID</th><th>Referencia</th></tr></thead><tbody><tr><td><code>[ENS]</code></td><td>Real Decreto 311/2022, de 3 de mayo, por el que se regula el Esquema Nacional de Seguridad. <strong>Artículo 26</strong> (continuidad de la actividad) y <strong>Anexo II</strong>: medida <strong><code>[mp.info.6]</code> Copias de seguridad</strong> y grupo <strong><code>[op.cont]</code></strong> (análisis de impacto, plan de continuidad, pruebas periódicas y medios alternativos).</td></tr><tr><td><code>[CCN-STIC]</code></td><td>Centro Criptológico Nacional. <em>Guías CCN-STIC serie 800</em> (desarrollo de las medidas del ENS; perfiles de cumplimiento y guías de configuración). ccn-cert.cni.es.</td></tr><tr><td><code>[ENI]</code></td><td>Real Decreto 4/2010, Esquema Nacional de Interoperabilidad, y sus <strong>Normas Técnicas de Interoperabilidad</strong> (política de gestión de documentos electrónicos, digitalización, catálogo de estándares). Marco de la conservación del documento electrónico.</td></tr><tr><td><code>[LEY39-2015]</code></td><td>Ley 39/2015, del Procedimiento Administrativo Común. <strong>Artículo 17</strong>: archivo electrónico único de los documentos que correspondan a procedimientos finalizados, con garantías de autenticidad, integridad y <strong>conservación</strong>.</td></tr><tr><td><code>[RGPD]</code></td><td>Reglamento (UE) 2016/679. <strong>Artículo 32</strong> (seguridad del tratamiento: confidencialidad, integridad, <strong>disponibilidad y resiliencia</strong>; capacidad de restaurar el acceso a los datos; verificación regular de la eficacia), <strong>artículo 5.1.e</strong> (limitación del plazo de conservación), <strong>artículos 33-34</strong> (notificación de brechas).</td></tr><tr><td><code>[LOPDGDD]</code></td><td>Ley Orgánica 3/2018, de Protección de Datos Personales y garantía de los derechos digitales. <strong>Artículo 32</strong>: bloqueo de los datos.</td></tr><tr><td><code>[AEPD]</code></td><td>Agencia Española de Protección de Datos. <em>Guía de medidas de seguridad</em>, <em>Guía para la gestión y notificación de brechas de seguridad</em> y criterios sobre el ejercicio del derecho de supresión frente a las copias de seguridad. aepd.es.</td></tr><tr><td><code>[BOAM10032]</code></td><td>BOAM 10.032 (23-dic-2025). Bases específicas TIC C1 Ayto. Madrid — temario oficial.</td></tr></tbody></table>
 <hr>
 <p><em>Las referencias Tier 1 fijan el fundamento del tema: la terminología y los modelos de SNIA, el artículo fundacional del RAID, las especificaciones de los protocolos de acceso a bloque (T10/T11, iSCSI, NVMe-oF) y a fichero (NFS, SMB), las normas ISO/IEC de seguridad del almacenamiento y de copias, y las guías del NIST sobre contingencia e infraestructura de almacenamiento. Tier 2 documenta productos concretos citados como ejemplo (VADP/CBT, RCT, vSAN, S2D, Ceph, S3 Object Lock, LTO) sin que el tema dependa de ningún fabricante. Tier 3 enmarca la normativa —ENS, ENI, Ley 39/2015, RGPD y LOPDGDD— que convierte la copia de seguridad, en el Ayuntamiento de Madrid, en una obligación jurídica y no solo en una buena práctica técnica.</em></p></section>
-<div class="footer">Tema 26 · v1.0 · 2026-08-20 · ETRIVIUM — IAM Ayuntamiento de Madrid · Generado desde los .md (sincronizado)</div>
+<div class="footer">Tema 26 · v1.1 · 2026-08-20 · ETRIVIUM — IAM Ayuntamiento de Madrid · Generado desde los .md (sincronizado)</div>
 </div>
 <script>
 const questions = [

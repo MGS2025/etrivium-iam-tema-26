@@ -4,6 +4,23 @@
 
 ---
 
+## v1.1 — 2026-09-06 — Ficha de extensión y tiempo de estudio
+
+**Estado**: sin cambios de contenido. Solo se añade información sobre el propio tema.
+
+**Motivo**: petición del IAM (Jesús Cuadrado, 02-09-2026) al validar el Tema 30. Acepta la extensión de los temas «compuestos» a condición de que se informe de «su extensión en palabras y tiempo estimado de estudio». Al revisarlo se vio que ese dato solo aparecía en 16 de los 40 temas, y que faltaba justo en los más largos.
+
+### Alcance
+
+- Ficha bajo la cabecera del tema, y al final de la pestaña Índice donde esa pestaña existe:
+  - **Extensión**: ~18.500 palabras · 14 diagramas · 60 preguntas de test
+  - **Tiempo estimado de estudio**: 16-18 horas (primera vuelta completa, sin contar repasos)
+- La cifra de palabras de la tabla de entregables se sincroniza con la ficha, para que el tema no muestre dos recuentos distintos.
+- Las horas salen de una fórmula común a los 40 temas, para que sean comparables entre sí: contenido a 1.500 palabras/hora (ritmo de estudio activo), diagramas a una hora por cada cinco y test a dos minutos por pregunta. Se publica como intervalo de dos horas.
+- Generado con `_tools-qa/ficha_estudio.py`, idempotente y reejecutable tras cualquier regeneración con `build_tNN.py`.
+
+---
+
 ## v1.0 — 2026-08-20 — Primera versión
 
 **Estado**: pendiente de validación por María y Ana, y de revisión técnica del IAM (Jesús Cuadrado).
