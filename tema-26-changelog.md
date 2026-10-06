@@ -4,6 +4,16 @@
 
 ---
 
+## v1.4 — 2026-10-06 — Revisión de diagramas
+
+**Motivo**: barrido de los diagramas de los 40 temas tras la revisión jurídica y de normas.
+
+### Cambios
+
+- Revisión visual de todos los diagramas, captura a captura (la medición automática no detecta contraste, flechas mal dirigidas ni textos pegados al borde): corregidos textos que se salían de su caja o del lienzo, cajas que se tocaban, flechas que no llegaban a su destino y textos con poco contraste. Sin cambios de contenido.
+
+---
+
 ## v1.3 — 2026-10-02 — Normas vigentes y correcciones comunes de la revisión
 
 **Motivo**: revisión de la serie del 01-10-2026 (decisiones de Joan y María): normas caducadas con el patrón de dos filas en Fuentes y correcciones comunes (referencias al cliente y al origen del material, promesas sobre el examen, AP → AAPP; en este tema no hay «AP» administrativo).

@@ -38,7 +38,7 @@
 **Propósito**: Fijar la distinción fundamental del tema: qué se sirve (bloque o fichero), por dónde y, sobre todo, **quién pone el sistema de ficheros**.
 
 ```svg
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 330" role="img" aria-label="Comparación de DAS, SAN y NAS indicando en cada caso qué se sirve (bloque o fichero), por qué medio viaja y si el sistema de ficheros lo gestiona el servidor o la cabina">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 336" role="img" aria-label="Comparación de DAS, SAN y NAS indicando en cada caso qué se sirve (bloque o fichero), por qué medio viaja y si el sistema de ficheros lo gestiona el servidor o la cabina">
   <style>.t1{font:700 11px system-ui,sans-serif;fill:#fff}.s1{font:9px system-ui,sans-serif;fill:#fff}.d1{font:9px system-ui,sans-serif;fill:#333}.h1{font:700 13px system-ui,sans-serif;fill:#0055a0}.k1{font:700 9px system-ui,sans-serif;fill:#0055a0}</style>
   <text x="340" y="20" text-anchor="middle" class="h1">DAS, SAN y NAS: dónde está la frontera de la red</text>
   <rect x="20" y="34" width="200" height="30" rx="5" fill="#0055a0"/><text x="120" y="54" text-anchor="middle" class="t1">DAS</text>
@@ -62,7 +62,7 @@
   <rect x="460" y="256" width="200" height="30" rx="4" fill="#eef3f8"/><text x="560" y="269" text-anchor="middle" class="d1">Cabina: aquí vive el</text><text x="560" y="281" text-anchor="middle" class="d1">sistema de ficheros</text>
   <rect x="60" y="294" width="560" height="26" rx="5" fill="none" stroke="#0055a0" stroke-width="2"/>
   <text x="340" y="311" text-anchor="middle" class="k1">Sirve bloques → el sistema de ficheros lo pone el SERVIDOR · Sirve ficheros → lo pone la CABINA</text>
-  <text x="670" y="328" text-anchor="end" style="font:9px system-ui;fill:#666">[Fuente: SNIA-DICT; SNIA-SSM]</text>
+  <text x="670" y="332" text-anchor="end" style="font:9px system-ui;fill:#666">[Fuente: SNIA-DICT; SNIA-SSM]</text>
 </svg>
 ```
 
