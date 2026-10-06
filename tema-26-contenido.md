@@ -16,15 +16,15 @@
 
 Este tema incluye cuatro tipos de **cajas callout** para facilitar el estudio:
 
-> **[DATO CLAVE EXAMEN]** Información de alta densidad memorística, con alta probabilidad de aparecer en el test oficial.
+> **[DATO CLAVE]** Información de alta densidad memorística.
 
 > **[EJERCICIO RESUELTO]** Problema + solución paso a paso (cálculo de capacidad útil, dimensionado de una ventana de copia, elección de una estrategia).
 
-> **[EJEMPLO AYTO MADRID]** Aplicación real de la teoría al entorno municipal (Padrón, sede electrónica, gestor de expedientes, archivo electrónico).
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** Aplicación real de la teoría al entorno municipal (Padrón, sede electrónica, gestor de expedientes, archivo electrónico).
 
-> **[REFERENCIA CRUZADA]** Enlace conceptual a otros temas del temario oficial.
+> **[RELACIÓN CON OTROS TEMAS]** Enlace conceptual a otros temas del temario oficial.
 
-Los ejemplos de **órdenes y ficheros de configuración** se escriben con la sintaxis real de las herramientas correspondientes (Linux, LVM, iSCSI, Windows, `rsync`, `tar`), porque este tema es eminentemente operativo: un pseudocódigo neutro impediría reconocer las herramientas que se preguntan en la parte práctica. Los fragmentos son deliberadamente breves e ilustrativos. Las fuentes se citan con etiquetas breves tipo `[SNIA-DICT]` o `[ENS]`; el registro completo está en `tema-26-fuentes.md`.
+Los ejemplos de **órdenes y ficheros de configuración** se escriben con la sintaxis real de las herramientas correspondientes (Linux, LVM, iSCSI, Windows, `rsync`, `tar`), porque este tema es eminentemente operativo: un pseudocódigo neutro impediría reconocer las herramientas reales. Los fragmentos son deliberadamente breves e ilustrativos. Las fuentes se citan con etiquetas breves tipo `[SNIA-DICT]` o `[ENS]`; el registro completo está en `tema-26-fuentes.md`.
 
 **Caso de referencia usado en todo el tema** (contexto Ayuntamiento de Madrid, supuesto simplificado): el **centro de proceso de datos municipal** aloja, sobre una **cabina de almacenamiento compartida** y un clúster de virtualización, cuatro cargas de trabajo con exigencias muy distintas: la **base de datos del Padrón municipal de habitantes**, el **gestor de expedientes** con su repositorio documental, la **sede electrónica** de cara a la ciudadanía y el **archivo electrónico** de documentos de procedimientos ya finalizados. Existe además un **segundo emplazamiento** al que se replican los sistemas críticos. Este supuesto concentra casi todas las dificultades del tema: convivencia de acceso a bloque y a fichero, virtualización del almacenamiento, distintos RPO y RTO por servicio, copias de sistemas físicos y virtuales, conservación a muy largo plazo del documento electrónico y obligaciones del ENS y del RGPD.
 
@@ -38,7 +38,7 @@ El almacenamiento es la capa del sistema de información que **conserva los dato
 
 El modelo de referencia de SNIA describe el almacenamiento compartido como una pila de capas: los **dispositivos físicos** (discos, unidades de estado sólido, cintas), una capa de **agregación por bloque** que los combina y presenta como volúmenes lógicos, una capa de **sistema de ficheros o base de datos** que da estructura a esos bloques, y finalmente la **aplicación**. La diferencia esencial entre las arquitecturas que siguen es **en qué punto de esa pila se traza la frontera de la red** [SNIA-SSM].
 
-> **[DATO CLAVE EXAMEN]** Las tres arquitecturas clásicas se distinguen por **qué sirven y a través de qué**: **DAS** sirve **bloques** por un **bus local** a un único servidor; **SAN** sirve **bloques** por una **red dedicada** a muchos servidores; **NAS** sirve **ficheros** por la **red IP** a muchos clientes. Si sirve bloques, el sistema de ficheros lo pone el **servidor**; si sirve ficheros, el sistema de ficheros lo pone la **cabina** [SNIA-DICT].
+> **[DATO CLAVE]** Las tres arquitecturas clásicas se distinguen por **qué sirven y a través de qué**: **DAS** sirve **bloques** por un **bus local** a un único servidor; **SAN** sirve **bloques** por una **red dedicada** a muchos servidores; **NAS** sirve **ficheros** por la **red IP** a muchos clientes. Si sirve bloques, el sistema de ficheros lo pone el **servidor**; si sirve ficheros, el sistema de ficheros lo pone la **cabina** [SNIA-DICT].
 
 Sobre esa tríada se han añadido después el **almacenamiento de objetos** —pensado para grandes volúmenes de datos no estructurados accedidos por HTTP— y las **cabinas unificadas**, que ofrecen simultáneamente varios de esos modos de acceso.
 
@@ -52,7 +52,7 @@ Un cuarto criterio, transversal, es el **medio físico** empleado, porque condic
 | **Memoria persistente / caché** | Latencia de nanosegundos a microsegundos, capacidad reducida | Aceleración de escrituras y de metadatos en la cabina |
 | **Cinta magnética (LTO)** | Acceso **secuencial**, coste por terabyte mínimo, consumo nulo en reposo, soporte extraíble | Archivo a largo plazo y copias fuera de línea |
 
-> **[REFERENCIA CRUZADA]** Los **elementos de almacenamiento** en cuanto dispositivos (discos, unidades ópticas, cintas, interfaces SATA/SAS/NVMe y sus características físicas) se estudian en el **Tema 12**, y la **arquitectura del ordenador** que los aloja, en el **Tema 11**. Este tema parte de ahí y estudia cómo esos dispositivos se **organizan en sistemas de almacenamiento compartido**, se virtualizan y se respaldan.
+> **[RELACIÓN CON OTROS TEMAS]** Los **elementos de almacenamiento** en cuanto dispositivos (discos, unidades ópticas, cintas, interfaces SATA/SAS/NVMe y sus características físicas) se estudian en el **Tema 12**, y la **arquitectura del ordenador** que los aloja, en el **Tema 11**. Este tema parte de ahí y estudia cómo esos dispositivos se **organizan en sistemas de almacenamiento compartido**, se virtualizan y se respaldan.
 
 #### 1.1.1. Almacenamiento de conexión directa (DAS)
 
@@ -75,15 +75,15 @@ Características que se derivan de esa conexión directa:
 | **Escalabilidad** | Limitada al número de bahías y de puertos de la controladora; se crece «hacia dentro» (*scale-up*) |
 | **Compartición** | Nula por sí misma: para compartir hay que publicar el volumen por red desde el servidor (con SMB o NFS), y entonces el servidor pasa a ser un cuello de botella y un punto único de fallo |
 
-> **[DATO CLAVE EXAMEN]** El DAS **no se comparte entre servidores**. Esa limitación —y no el rendimiento, que es excelente— es la razón por la que la virtualización de servidores en clúster, que exige que **varios anfitriones vean el mismo volumen a la vez** para poder mover máquinas virtuales entre ellos, empujó a las organizaciones hacia la SAN y el NAS [SNIA-DICT].
+> **[DATO CLAVE]** El DAS **no se comparte entre servidores**. Esa limitación —y no el rendimiento, que es excelente— es la razón por la que la virtualización de servidores en clúster, que exige que **varios anfitriones vean el mismo volumen a la vez** para poder mover máquinas virtuales entre ellos, empujó a las organizaciones hacia la SAN y el NAS [SNIA-DICT].
 
 El DAS conserva hoy dos nichos importantes: los servidores pequeños o de sucursal, donde no compensa una infraestructura de red de almacenamiento; y, paradójicamente, las modernas arquitecturas de **almacenamiento definido por software** e **hiperconvergencia** (§2), que emplean discos locales —es decir, DAS— en cada nodo y construyen por software la capa compartida que antes aportaba la cabina.
 
-> **[EJEMPLO AYTO MADRID]** El servidor de una **oficina de atención a la ciudadanía** de un distrito, con dos discos en espejo internos, es DAS puro. En el CPD municipal, en cambio, los anfitriones de virtualización que ejecutan la sede electrónica **no pueden** usar DAS para los discos de las máquinas virtuales, porque el clúster necesita que todos los anfitriones vean el mismo almacén de datos para poder migrar máquinas en caliente y arrancarlas en otro nodo si uno cae.
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** El servidor de una **oficina de atención a la ciudadanía** de un distrito, con dos discos en espejo internos, es DAS puro. En el CPD municipal, en cambio, los anfitriones de virtualización que ejecutan la sede electrónica **no pueden** usar DAS para los discos de las máquinas virtuales, porque el clúster necesita que todos los anfitriones vean el mismo almacén de datos para poder migrar máquinas en caliente y arrancarlas en otro nodo si uno cae.
 
 #### 1.1.2. Redes de área de almacenamiento (SAN) y almacenamiento conectado a red (NAS)
 
-Estas dos arquitecturas resuelven el mismo problema —compartir almacenamiento entre muchos servidores— con dos filosofías opuestas. Distinguirlas con precisión es el punto más preguntado de la primera parte del tema.
+Estas dos arquitecturas resuelven el mismo problema —compartir almacenamiento entre muchos servidores— con dos filosofías opuestas. Distinguirlas con precisión es el punto central de la primera parte del tema.
 
 **Red de área de almacenamiento (SAN).** Una *Storage Area Network* es una **red especializada y normalmente dedicada** cuyo único tráfico es el de almacenamiento. La cabina expone **unidades lógicas de bloque** llamadas **LUN** (*Logical Unit Number*), y cada servidor ve el LUN que le corresponde **como si fuera un disco propio**: le aplica su tabla de particiones, lo formatea con su sistema de ficheros y escribe en él con comandos de bloque [SNIA-DICT] [T10-SCSI].
 
@@ -96,7 +96,7 @@ Sus componentes son:
 
 El aislamiento entre servidores se consigue con dos mecanismos complementarios: el ***zoning***, configurado en el conmutador, que decide qué iniciador puede «ver» qué objetivo; y el ***LUN masking***, configurado en la cabina, que decide qué LUN se presenta a qué servidor [T11-FC] [NIST-SP800-209].
 
-> **[DATO CLAVE EXAMEN]** ***Zoning* se configura en el conmutador de la SAN; *LUN masking*, en la cabina.** El primero controla la visibilidad entre puertos; el segundo, qué unidad lógica concreta ve cada servidor. Ambos son medidas de seguridad y también de prevención de corrupción: si dos servidores no preparados escriben a la vez sobre el mismo LUN, el sistema de ficheros se destruye [NIST-SP800-209].
+> **[DATO CLAVE]** ***Zoning* se configura en el conmutador de la SAN; *LUN masking*, en la cabina.** El primero controla la visibilidad entre puertos; el segundo, qué unidad lógica concreta ve cada servidor. Ambos son medidas de seguridad y también de prevención de corrupción: si dos servidores no preparados escriben a la vez sobre el mismo LUN, el sistema de ficheros se destruye [NIST-SP800-209].
 
 **Almacenamiento conectado a red (NAS).** Un *Network Attached Storage* es un **sistema completo con su propio sistema operativo y su propio sistema de ficheros** que publica carpetas compartidas por la red IP mediante protocolos de fichero: **NFS**, tradicional del mundo Unix/Linux, y **SMB**, tradicional del mundo Windows [RFC8881] [MS-SMB2]. El cliente no ve bloques ni discos: ve **rutas, carpetas y ficheros**, y pide operaciones de alto nivel («abre este fichero», «lee estos bytes de él»).
 
@@ -115,7 +115,7 @@ La diferencia estructural puede resumirse en una frase: **en la SAN el sistema d
 > **[EJERCICIO RESUELTO]** *Un servicio municipal necesita (a) alojar los discos de 40 máquinas virtuales de la sede electrónica y (b) publicar una carpeta compartida donde 300 empleados guarden documentos ofimáticos. ¿SAN o NAS para cada uno?*
 > **Solución.** (a) **SAN** (o NAS con NFS, que también admite almacenes de datos, pero típicamente SAN por latencia): el hipervisor necesita acceso de **bloque** de baja latencia, y varios anfitriones deben ver el mismo LUN a la vez para migrar máquinas; sobre ese LUN el hipervisor pone su propio sistema de ficheros de clúster. (b) **NAS**: lo que se comparte son **ficheros**, con muchos usuarios concurrentes, permisos por usuario y bloqueo de ficheros; poner un LUN sería inútil, porque un LUN no se comparte entre 300 puestos.
 
-> **[DATO CLAVE EXAMEN]** Regla mnemotécnica de examen: **NAS = fichero** (el cliente ve una carpeta) · **SAN = bloque** (el cliente ve un disco). Y un aviso frecuente: **una cabina NAS conectada a la red no es una SAN por el hecho de estar en red**; lo que define a la SAN es que sirve **bloques** por una red **dedicada** al almacenamiento [SNIA-DICT].
+> **[DATO CLAVE]** Regla mnemotécnica: **NAS = fichero** (el cliente ve una carpeta) · **SAN = bloque** (el cliente ve un disco). Y un aviso frecuente: **una cabina NAS conectada a la red no es una SAN por el hecho de estar en red**; lo que define a la SAN es que sirve **bloques** por una red **dedicada** al almacenamiento [SNIA-DICT].
 
 #### 1.1.3. Almacenamiento de objetos y almacenamiento unificado
 
@@ -137,13 +137,13 @@ La diferencia estructural puede resumirse en una frase: **en la SAN el sistema d
 | **Latencia** | Muy baja | Baja | Mayor (HTTP) |
 | **Uso idóneo** | Bases de datos, VM | Carpetas compartidas, directorios de usuario | Archivo, contenidos, copias de seguridad, datos de aplicaciones nativas de nube |
 
-> **[DATO CLAVE EXAMEN]** El almacenamiento de objetos **no sirve** para alojar una base de datos transaccional ni el disco de una máquina virtual en producción: no permite modificación parcial y su latencia es la de una petición HTTP. Su terreno es el **dato que se escribe una vez y se lee muchas** —o casi nunca—: archivo, contenidos multimedia y, muy señaladamente, **repositorios de copias de seguridad inmutables** [S3-LOCK] [NIST-SP800-209].
+> **[DATO CLAVE]** El almacenamiento de objetos **no sirve** para alojar una base de datos transaccional ni el disco de una máquina virtual en producción: no permite modificación parcial y su latencia es la de una petición HTTP. Su terreno es el **dato que se escribe una vez y se lee muchas** —o casi nunca—: archivo, contenidos multimedia y, muy señaladamente, **repositorios de copias de seguridad inmutables** [S3-LOCK] [NIST-SP800-209].
 
 **Almacenamiento unificado.** Una **cabina unificada** es la que ofrece **varios modos de acceso simultáneos sobre el mismo hardware y el mismo pool de discos**: LUN por iSCSI o Fibre Channel para los servidores, recursos compartidos por NFS y SMB para los usuarios y, en los modelos más recientes, una pasarela de objetos compatible con la API de S3 [SNIA-DICT] [CEPH].
 
 Sus ventajas son la **consolidación** (un solo equipo, una sola consola, un solo contrato de mantenimiento, un único conjunto de discos que se reparte según haga falta) y el aprovechamiento común de las funciones de la cabina —instantáneas, réplica, deduplicación, cifrado— por parte de los tres modos de acceso. Su riesgo es la **concentración**: la cabina unificada se convierte en un punto único de fallo de servicios muy distintos y en un objetivo de altísimo valor para un atacante, lo que obliga a extremar la alta disponibilidad, la segmentación de la gestión y, sobre todo, a que las copias de seguridad **no residan en la propia cabina** (§3.1.2).
 
-> **[EJEMPLO AYTO MADRID]** Una cabina unificada del CPD municipal puede servir, con el mismo hardware: los **LUN** de los almacenes de datos donde viven las máquinas virtuales de la sede electrónica y del gestor de expedientes; un recurso **SMB** con las carpetas departamentales de las áreas de gobierno; y un **contenedor de objetos** donde el archivo electrónico deposita los documentos de expedientes finalizados, con metadatos de expediente y política de retención asociada. Los tres modos comparten los mismos discos, las mismas instantáneas y el mismo cifrado en reposo.
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** Una cabina unificada del CPD municipal puede servir, con el mismo hardware: los **LUN** de los almacenes de datos donde viven las máquinas virtuales de la sede electrónica y del gestor de expedientes; un recurso **SMB** con las carpetas departamentales de las áreas de gobierno; y un **contenedor de objetos** donde el archivo electrónico deposita los documentos de expedientes finalizados, con metadatos de expediente y política de retención asociada. Los tres modos comparten los mismos discos, las mismas instantáneas y el mismo cifrado en reposo.
 
 ### 1.2. Protocolos y tolerancias en almacenamiento
 
@@ -178,9 +178,9 @@ Sus ventajas son la **consolidación** (un solo equipo, una sola consola, un sol
 | **SMB 3.x** | Fichero | TCP/IP | 445 | Windows; cifrado, *multichannel*, ACL de dominio |
 | **HTTP/S (S3)** | Objeto | TCP/IP | 80/443 | REST; metadatos ricos, versionado e inmutabilidad |
 
-> **[DATO CLAVE EXAMEN]** Cuatro números que se preguntan: **iSCSI 3260**, **NFS 2049**, **SMB 445**, **objeto 443 (HTTPS)**. Y una asociación: **IQN** identifica extremos iSCSI, **WWN** identifica puertos Fibre Channel, **NQN** identifica extremos NVMe-oF [RFC7143] [T11-FC] [NVME-OF].
+> **[DATO CLAVE]** Cuatro números clave: **iSCSI 3260**, **NFS 2049**, **SMB 445**, **objeto 443 (HTTPS)**. Y una asociación: **IQN** identifica extremos iSCSI, **WWN** identifica puertos Fibre Channel, **NQN** identifica extremos NVMe-oF [RFC7143] [T11-FC] [NVME-OF].
 
-> **[REFERENCIA CRUZADA]** Los fundamentos de **TCP/IP y del modelo OSI** están en el **Tema 34**; **HTTP, HTTPS y TLS**, en el **Tema 35**; el diseño y la administración de **redes locales** y su segmentación en VLAN, en los **Temas 37 y 30**. Aquí solo se consideran en la medida en que transportan el tráfico de almacenamiento.
+> **[RELACIÓN CON OTROS TEMAS]** Los fundamentos de **TCP/IP y del modelo OSI** están en el **Tema 34**; **HTTP, HTTPS y TLS**, en el **Tema 35**; el diseño y la administración de **redes locales** y su segmentación en VLAN, en los **Temas 37 y 30**. Aquí solo se consideran en la medida en que transportan el tráfico de almacenamiento.
 
 #### 1.2.2. Niveles RAID y técnicas de optimización (deduplicación, thin provisioning)
 
@@ -216,7 +216,7 @@ Dos consideraciones prácticas que separan al técnico del memorizador:
 > · **RAID 10**: 40 TB útiles, tolera 1 disco por espejo (hasta 5 si caen uno de cada pareja; 2 mal repartidos ya destruyen el conjunto).
 > Elección razonable para una base de datos con escritura intensa: **RAID 10**; para un repositorio documental de lectura dominante: **RAID 6**.
 
-> **[DATO CLAVE EXAMEN]** **El RAID no es una copia de seguridad.** Protege frente al **fallo físico de un disco**, pero replica instantáneamente el borrado accidental, la corrupción lógica, el error de la aplicación y el cifrado por *ransomware*. Un sistema en RAID 6 y sin copias está **completamente desprotegido** frente a los incidentes más frecuentes [ISO27002] [NIST-SP800-209].
+> **[DATO CLAVE]** **El RAID no es una copia de seguridad.** Protege frente al **fallo físico de un disco**, pero replica instantáneamente el borrado accidental, la corrupción lógica, el error de la aplicación y el cifrado por *ransomware*. Un sistema en RAID 6 y sin copias está **completamente desprotegido** frente a los incidentes más frecuentes [ISO27002] [NIST-SP800-209].
 
 **Técnicas de optimización.** Las cabinas modernas añaden sobre el RAID (o sobre el pool que lo sustituye) un conjunto de funciones que reducen el espacio consumido y mejoran el aprovechamiento:
 
@@ -227,7 +227,7 @@ Dos consideraciones prácticas que separan al técnico del memorizador:
 - **Instantáneas (*snapshots*) de cabina**: puntos de retorno casi instantáneos y de coste inicial nulo, implementados por **copia en escritura** (*copy-on-write*) o por **redirección en escritura** (*redirect-on-write*). Son utilísimas, pero **dependen del volumen original**: no son copia de seguridad (§4.2.2) [SNIA-DICT] [VMW-SNAP].
 - **Cifrado en reposo**: bien en los propios discos (*self-encrypting drives*), bien en la controladora. Protege frente a la **sustracción o el desecho de un disco**, y es la razón por la que un disco retirado debe además someterse a saneamiento conforme a criterios como los del NIST [NIST-SP800-88] [ISO27040].
 
-> **[EJEMPLO AYTO MADRID]** El almacén de datos que aloja las **120 máquinas virtuales** del CPD municipal, casi todas con la misma imagen base del sistema operativo, es el escenario ideal para la deduplicación: los bloques del sistema operativo se guardan **una vez**. Con *thin provisioning*, además, cada máquina virtual declara 100 GB de disco y consume 30 GB reales. La contrapartida operativa es inevitable: **hay que vigilar el llenado real del pool**, porque 120 discos «de 100 GB» sobre un pool de 5 TB funcionan solo mientras nadie los llene de verdad.
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** El almacén de datos que aloja las **120 máquinas virtuales** del CPD municipal, casi todas con la misma imagen base del sistema operativo, es el escenario ideal para la deduplicación: los bloques del sistema operativo se guardan **una vez**. Con *thin provisioning*, además, cada máquina virtual declara 100 GB de disco y consume 30 GB reales. La contrapartida operativa es inevitable: **hay que vigilar el llenado real del pool**, porque 120 discos «de 100 GB» sobre un pool de 5 TB funcionan solo mientras nadie los llene de verdad.
 
 ---
 
@@ -246,9 +246,9 @@ La definición canónica de SNIA la formula como el **acto de abstraer, ocultar 
 | **Aprovisionamiento ágil** | Crear, ampliar, clonar o proteger un volumen es una operación de software, en minutos y sin tocar cables |
 | **Funciones avanzadas comunes** | Instantáneas, réplica, *tiering*, deduplicación y cifrado se aplican de forma homogénea sobre recursos de procedencia distinta |
 
-> **[DATO CLAVE EXAMEN]** No hay que confundir **virtualización del almacenamiento** (abstraer discos y cabinas en volúmenes lógicos) con **virtualización de servidores** (ejecutar varios sistemas operativos sobre un mismo anfitrión mediante un hipervisor). Son disciplinas distintas que se necesitan mutuamente: la virtualización de servidores es, de hecho, **el principal consumidor** de almacenamiento virtualizado [SNIA-DICT].
+> **[DATO CLAVE]** No hay que confundir **virtualización del almacenamiento** (abstraer discos y cabinas en volúmenes lógicos) con **virtualización de servidores** (ejecutar varios sistemas operativos sobre un mismo anfitrión mediante un hipervisor). Son disciplinas distintas que se necesitan mutuamente: la virtualización de servidores es, de hecho, **el principal consumidor** de almacenamiento virtualizado [SNIA-DICT].
 
-> **[REFERENCIA CRUZADA]** La **virtualización de sistemas y de puestos de usuario** —hipervisores de tipo 1 y 2, máquinas virtuales, contenedores, VDI— es objeto del **Tema 28**. Los **paradigmas de computación distribuida y los servicios en la nube** (IaaS, PaaS, SaaS; nube pública, privada e híbrida), del **Tema 31**. Este tema se ocupa solo de la virtualización **del almacenamiento** y de sus consecuencias para el respaldo.
+> **[RELACIÓN CON OTROS TEMAS]** La **virtualización de sistemas y de puestos de usuario** —hipervisores de tipo 1 y 2, máquinas virtuales, contenedores, VDI— es objeto del **Tema 28**. Los **paradigmas de computación distribuida y los servicios en la nube** (IaaS, PaaS, SaaS; nube pública, privada e híbrida), del **Tema 31**. Este tema se ocupa solo de la virtualización **del almacenamiento** y de sus consecuencias para el respaldo.
 
 Un concepto instrumental atraviesa todos los modelos: el ***pool*** **de almacenamiento**, un conjunto de capacidad física agregada —normalmente ya protegida con RAID o codificación de borrado— del que se **tallan** los volúmenes lógicos bajo demanda, con aprovisionamiento fino y, en muchas cabinas, con **niveles** (*tiers*) de distinto rendimiento dentro del mismo pool.
 
@@ -296,9 +296,9 @@ Una variante importante es la **virtualización de cabinas externas**: una cabin
 | **Red** | *Appliance* o conmutador de la SAN | Unifica cabinas **heterogéneas**; migración sin parada | Latencia añadida (en banda) y punto crítico a duplicar | Virtualizador de almacenamiento en el fabric |
 | **Cabina** | Controladoras de la cabina | Máximo rendimiento; funciones integradas | Atado al fabricante; alcance limitado a esa cabina | Pools, LUN virtuales y *snapshots* de la cabina |
 
-> **[DATO CLAVE EXAMEN]** Los **tres modelos** de virtualización del almacenamiento son **host, red y cabina**. Regla rápida para el examen: si el enunciado habla de **LVM o de gestor de volúmenes** → host; si habla de **unificar cabinas de distintos fabricantes o migrar sin parada** → red; si habla de **pools, LUN, instantáneas y réplica de la propia cabina** → cabina [SNIA-DICT].
+> **[DATO CLAVE]** Los **tres modelos** de virtualización del almacenamiento son **host, red y cabina**. Regla rápida: si el enunciado habla de **LVM o de gestor de volúmenes** → host; si habla de **unificar cabinas de distintos fabricantes o migrar sin parada** → red; si habla de **pools, LUN, instantáneas y réplica de la propia cabina** → cabina [SNIA-DICT].
 
-> **[EJEMPLO AYTO MADRID]** En la renovación de la cabina principal del CPD municipal, la virtualización **basada en red** o la **virtualización de cabina externa** permiten que la cabina nueva adopte los volúmenes de la antigua y migre los bloques en segundo plano mientras la sede electrónica sigue funcionando. La alternativa —parar los servicios, copiar y volver a arrancar— exigiría una ventana de indisponibilidad de fin de semana difícil de justificar en un servicio público de atención continua.
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** En la renovación de la cabina principal del CPD municipal, la virtualización **basada en red** o la **virtualización de cabina externa** permiten que la cabina nueva adopte los volúmenes de la antigua y migre los bloques en segundo plano mientras la sede electrónica sigue funcionando. La alternativa —parar los servicios, copiar y volver a arrancar— exigiría una ventana de indisponibilidad de fin de semana difícil de justificar en un servicio público de atención continua.
 
 #### 2.1.2. Almacenamiento definido por software (SDS)
 
@@ -323,7 +323,7 @@ Ejemplos representativos: **Ceph** (con sus tres interfaces: bloque RBD, fichero
 | **Gestión** | Consola del fabricante | API y **políticas**; se integra con la orquestación del centro de datos |
 | **Riesgo** | Dependencia del fabricante | Complejidad operativa y exigencia de personal cualificado; la red pasa a ser crítica |
 
-> **[DATO CLAVE EXAMEN]** El rasgo que define al SDS es la **separación del plano de control (políticas) y el plano de datos**, sobre **hardware estándar** y con **crecimiento horizontal**. No basta con que un producto sea software: una cabina también se gobierna por software. Lo distintivo es que **la inteligencia deja de residir en un hardware propietario** [SNIA-SDS].
+> **[DATO CLAVE]** El rasgo que define al SDS es la **separación del plano de control (políticas) y el plano de datos**, sobre **hardware estándar** y con **crecimiento horizontal**. No basta con que un producto sea software: una cabina también se gobierna por software. Lo distintivo es que **la inteligencia deja de residir en un hardware propietario** [SNIA-SDS].
 
 Conviene subrayar una consecuencia operativa poco intuitiva: en SDS y en hiperconvergencia, **la red interna se convierte en parte del almacenamiento**. Si la red entre nodos se degrada, se degrada el almacenamiento entero, porque cada escritura debe confirmarse en varios nodos antes de darse por buena. Por eso estos diseños exigen redes de 10/25 Gbit/s o superiores, redundantes y dedicadas.
 
@@ -362,11 +362,11 @@ Sus características:
 - **Calidad de servicio (QoS)**: límites y garantías de operaciones por segundo y de ancho de banda por volumen, para que una carga «ruidosa» no degrade a las demás.
 - **Reserva de holgura** (*slack space*): espacio libre que **no debe consumirse**, reservado para poder reconstruir los datos cuando cae un nodo o un disco. Es el error de dimensionamiento más frecuente en HCI: llenar el pool al 95 % deja al sistema **sin sitio para autorrepararse**.
 
-> **[DATO CLAVE EXAMEN]** En HCI, el crecimiento es **por nodos** (*scale-out*), la unidad de gestión es la **política por máquina virtual** y la red entre nodos forma parte del almacenamiento. Y una regla de dimensionado que se pregunta: hay que **reservar espacio libre suficiente para la reconstrucción** tras la caída de un nodo; un pool lleno no puede autorrepararse [VSAN] [NUTANIX].
+> **[DATO CLAVE]** En HCI, el crecimiento es **por nodos** (*scale-out*), la unidad de gestión es la **política por máquina virtual** y la red entre nodos forma parte del almacenamiento. Y una regla de dimensionado: hay que **reservar espacio libre suficiente para la reconstrucción** tras la caída de un nodo; un pool lleno no puede autorrepararse [VSAN] [NUTANIX].
 
-> **[EJEMPLO AYTO MADRID]** Un clúster hiperconvergente de cuatro nodos en el CPD municipal alojaría las máquinas virtuales de la sede electrónica con una política de **tolerancia a un fallo** (dos copias de cada bloque), y las del entorno de preproducción sin réplica. Al llegar un pico de demanda —por ejemplo, la apertura de un plazo de solicitud de escolarización—, ampliar el clúster consiste en **añadir un quinto nodo**, con lo que crecen a la vez la CPU, la memoria y la capacidad, sin ventana de parada y sin renegociar la cabina.
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** Un clúster hiperconvergente de cuatro nodos en el CPD municipal alojaría las máquinas virtuales de la sede electrónica con una política de **tolerancia a un fallo** (dos copias de cada bloque), y las del entorno de preproducción sin réplica. Al llegar un pico de demanda —por ejemplo, la apertura de un plazo de solicitud de escolarización—, ampliar el clúster consiste en **añadir un quinto nodo**, con lo que crecen a la vez la CPU, la memoria y la capacidad, sin ventana de parada y sin renegociar la cabina.
 
-> **[REFERENCIA CRUZADA]** La **administración del sistema operativo y del software de base** que se ejecuta en esos nodos —parcheado, mantenimiento, actualización— corresponde al **Tema 27**; la **monitorización y el control del tráfico** de la red que los une, al **Tema 30**. La perspectiva de **nube privada** que estas arquitecturas habilitan se desarrolla en el **Tema 31**.
+> **[RELACIÓN CON OTROS TEMAS]** La **administración del sistema operativo y del software de base** que se ejecuta en esos nodos —parcheado, mantenimiento, actualización— corresponde al **Tema 27**; la **monitorización y el control del tráfico** de la red que los une, al **Tema 30**. La perspectiva de **nube privada** que estas arquitecturas habilitan se desarrolla en el **Tema 31**.
 
 ---
 
@@ -386,7 +386,7 @@ Una **copia de seguridad** (*backup*) es una copia de los datos —y, cuando pro
 | **Ataque interno o sustracción** | Baja | No |
 | **Obligación legal de recuperar el pasado** (auditoría, recurso, litigio) | Constante en la Administración | No: solo lo cubre la **retención** de copias |
 
-> **[DATO CLAVE EXAMEN]** **Alta disponibilidad ≠ copia de seguridad.** Un clúster, un RAID o una réplica síncrona protegen frente al **fallo de un componente** y replican al instante cualquier borrado o cifrado malicioso. La copia de seguridad protege frente al **contenido erróneo**, porque conserva **estados anteriores en el tiempo** [ISO27002] [NIST-SP800-34].
+> **[DATO CLAVE]** **Alta disponibilidad ≠ copia de seguridad.** Un clúster, un RAID o una réplica síncrona protegen frente al **fallo de un componente** y replican al instante cualquier borrado o cifrado malicioso. La copia de seguridad protege frente al **contenido erróneo**, porque conserva **estados anteriores en el tiempo** [ISO27002] [NIST-SP800-34].
 
 **La política de copias de seguridad.** Toda organización sujeta al ENS debe tener una política documentada y aprobada que responda, servicio por servicio, a siete preguntas [ENS] [ISO27002]:
 
@@ -402,7 +402,7 @@ Esa política no se escribe en abstracto: se deriva de un **análisis de impacto
 
 #### 3.1.1. Parámetros RTO y RPO en la planificación de respaldos
 
-Son los dos parámetros centrales del tema y los más preguntados. Se definen sobre la línea temporal de un incidente:
+Son los dos parámetros centrales del tema. Se definen sobre la línea temporal de un incidente:
 
 - **RPO** (*Recovery Point Objective*, objetivo de punto de recuperación): **cuántos datos**, medidos en tiempo, puede permitirse perder la organización. Se mide **hacia atrás** desde el incidente, hasta el último punto de recuperación válido. Un RPO de 4 horas significa que, tras el desastre, se aceptará haber perdido como mucho el trabajo de las últimas 4 horas. **Determina la frecuencia de las copias**: si el RPO es de 4 horas, no puede copiarse una vez al día.
 - **RTO** (*Recovery Time Objective*, objetivo de tiempo de recuperación): **cuánto tiempo** puede estar el servicio interrumpido. Se mide **hacia delante** desde el incidente hasta que el servicio vuelve a estar operativo. **Determina la tecnología** de recuperación: un RTO de 15 minutos no se alcanza restaurando 4 TB desde cinta; exige una réplica encendible o una restauración instantánea desde disco.
@@ -418,7 +418,7 @@ Junto a ellos aparecen otros parámetros que conviene distinguir:
 | **Ventana de copia** | Intervalo disponible para ejecutar la copia sin degradar el servicio |
 | **Ventana de restauración** | Tiempo que se tarda en restaurar; es la parte técnica del RTO |
 
-> **[DATO CLAVE EXAMEN]** **RPO mira al pasado (datos perdidos) y fija la FRECUENCIA de la copia; RTO mira al futuro (tiempo de parada) y fija la TECNOLOGÍA de recuperación.** Regla mnemotécnica: **RPO = Pérdida**, **RTO = Tiempo**. Ambos se derivan del análisis de impacto y **cuestan dinero**: acercarlos a cero multiplica el coste, y por eso se fijan por servicio y no de forma uniforme [ISO22301] [NIST-SP800-34].
+> **[DATO CLAVE]** **RPO mira al pasado (datos perdidos) y fija la FRECUENCIA de la copia; RTO mira al futuro (tiempo de parada) y fija la TECNOLOGÍA de recuperación.** Regla mnemotécnica: **RPO = Pérdida**, **RTO = Tiempo**. Ambos se derivan del análisis de impacto y **cuestan dinero**: acercarlos a cero multiplica el coste, y por eso se fijan por servicio y no de forma uniforme [ISO22301] [NIST-SP800-34].
 
 La consecuencia práctica es que **no existe una política única**: cada servicio recibe la suya en función de su criticidad.
 
@@ -447,7 +447,7 @@ El esquema clásico de retención escalonada es el **GFS** (*Grandfather-Father-
 | **Abuelo** (*grandfather*) | Mensual | 12 meses | Referencia mensual; auditoría |
 | **Anual** | Anual | 5-10 años o lo que exija la norma | Conservación legal y archivo |
 
-> **[DATO CLAVE EXAMEN]** La retención no puede ser infinita: el **artículo 5.1.e del RGPD** impone la **limitación del plazo de conservación** de los datos personales, de modo que una política que guarde copias «para siempre por si acaso» es, además de cara, **contraria a la norma**. La retención se fija justificadamente y su vencimiento debe ejecutarse de verdad, con destrucción segura del soporte [RGPD] [NIST-SP800-88].
+> **[DATO CLAVE]** La retención no puede ser infinita: el **artículo 5.1.e del RGPD** impone la **limitación del plazo de conservación** de los datos personales, de modo que una política que guarde copias «para siempre por si acaso» es, además de cara, **contraria a la norma**. La retención se fija justificadamente y su vencimiento debe ejecutarse de verdad, con destrucción segura del soporte [RGPD] [NIST-SP800-88].
 
 **Ventana de copia.** Es el intervalo en el que la copia puede ejecutarse sin degradar el servicio, tradicionalmente nocturno. El problema clásico de la planificación es que **el volumen de datos crece más deprisa que la ventana**, que es fija —de hecho se estrecha, porque los servicios electrónicos tienden a estar disponibles 24×7—. Las soluciones son conocidas:
 
@@ -460,7 +460,7 @@ El esquema clásico de retención escalonada es el **GFS** (*Grandfather-Father-
 > **[EJERCICIO RESUELTO]** *Hay que copiar 20 TB por una red de 10 Gbit/s con una ventana de 8 horas. ¿Cabe?*
 > **Solución.** 10 Gbit/s son 1,25 GB/s teóricos; con una eficiencia realista del 60 % quedan unos **0,75 GB/s**. En 8 horas (28.800 s) se transfieren ≈ **21,6 TB**. Cabe **muy justo**, y solo si la cabina de origen y el repositorio de destino sostienen ese caudal, cosa que rara vez ocurre con muchos ficheros pequeños. Conclusión práctica: hacer **copia completa semanal e incrementales diarios** (que moverán en torno al 2-5 % del total, es decir, 0,4-1 TB diarios), añadir deduplicación en origen y, si el crecimiento continúa, paralelizar con un segundo proxy. El error típico del cálculo es olvidar que la limitación real no suele ser la red, sino **la lectura del origen**.
 
-**La regla 3-2-1.** Es la regla de oro del respaldo, y la que con más seguridad aparece en el examen:
+**La regla 3-2-1.** Es la regla de oro del respaldo:
 
 - **3** copias de los datos (el original y **dos** copias más).
 - En **2** tipos de soporte o sistemas distintos (por ejemplo, disco y cinta, o cabina primaria y repositorio de copias con otra tecnología).
@@ -471,14 +471,14 @@ Su extensión moderna, motivada por el *ransomware*, es la **3-2-1-1-0**:
 - **1** copia adicional **inmutable o desconectada** (*offline*, «con aire de por medio» o *air gap*), que un atacante con credenciales de administrador **no pueda borrar ni cifrar**.
 - **0** errores: la copia se **verifica** y debe restaurarse correctamente en las pruebas (§3.3.2).
 
-> **[DATO CLAVE EXAMEN]** **3-2-1**: tres copias · dos soportes distintos · una fuera de la ubicación. **3-2-1-1-0** añade una copia **inmutable o fuera de línea** y **cero errores de verificación**. La justificación del añadido es concreta: el *ransomware* moderno **busca y cifra primero las copias de seguridad** y los catálogos, precisamente para impedir la recuperación sin pagar [ISO27002] [NIST-SP800-209].
+> **[DATO CLAVE]** **3-2-1**: tres copias · dos soportes distintos · una fuera de la ubicación. **3-2-1-1-0** añade una copia **inmutable o fuera de línea** y **cero errores de verificación**. La justificación del añadido es concreta: el *ransomware* moderno **busca y cifra primero las copias de seguridad** y los catálogos, precisamente para impedir la recuperación sin pagar [ISO27002] [NIST-SP800-209].
 
-Dos corolarios que suelen preguntarse con enunciado capcioso:
+Dos corolarios que conviene no confundir:
 
 - Una copia guardada **en la misma cabina** que el dato original **no cumple el 3-2-1**: comparte el fallo de la cabina, el incendio de la sala y, si el atacante entra en la cabina, también el borrado.
 - Una copia **conectada permanentemente** con credenciales del mismo dominio no cumple la parte «1» de la versión reforzada: un atacante que compromete el directorio corporativo llega también al repositorio. De ahí las buenas prácticas de **credenciales separadas**, autenticación multifactor en la consola de copias y repositorio **inmutable**.
 
-> **[EJEMPLO AYTO MADRID]** Aplicación del 3-2-1-1-0 al CPD municipal: **copia 1**, el dato en producción en la cabina principal; **copia 2**, repositorio de disco con deduplicación en la misma sala, para restauraciones rápidas (RTO bajo); **copia 3**, réplica del repositorio al **segundo CPD** (fuera de la ubicación); **copia inmutable**, contenedor de objetos con bloqueo WORM y retención de 30 días, más cinta LTO extraída y custodiada para el archivo; **cero errores**, prueba de restauración mensual documentada con acta. Nótese que el requisito de la copia fuera de la ubicación no es una recomendación técnica opcional: se conecta directamente con el artículo 26 del ENS y con las medidas del grupo `[op.cont]` (§5.1.1) [ENS].
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** Aplicación del 3-2-1-1-0 al CPD municipal: **copia 1**, el dato en producción en la cabina principal; **copia 2**, repositorio de disco con deduplicación en la misma sala, para restauraciones rápidas (RTO bajo); **copia 3**, réplica del repositorio al **segundo CPD** (fuera de la ubicación); **copia inmutable**, contenedor de objetos con bloqueo WORM y retención de 30 días, más cinta LTO extraída y custodiada para el archivo; **cero errores**, prueba de restauración mensual documentada con acta. Nótese que el requisito de la copia fuera de la ubicación no es una recomendación técnica opcional: se conecta directamente con el artículo 26 del ENS y con las medidas del grupo `[op.cont]` (§5.1.1) [ENS].
 
 ### 3.2. Tipos y soportes de backup
 
@@ -505,7 +505,7 @@ Variantes complementarias que conviene conocer:
 | **Diferencial** | Cambios desde la **última completa** | Medio (creciente) | Medio (creciente) | Rápida | Completa + **última** diferencial |
 | **Sintética** | Nada del origen: consolida en el repositorio | Nulo en producción | Como una completa (con deduplicación, mucho menos) | La más rápida | 1 |
 
-> **[DATO CLAVE EXAMEN]** La distinción incremental/diferencial es la pregunta de test más recurrente de todo el tema: **incremental = desde la última copia** (cadena larga, restauración lenta, poco espacio); **diferencial = desde la última completa** (crece cada día, restauración con solo dos piezas). Y una consecuencia que también se pregunta: si el lunes se hace completa y de martes a viernes **diferenciales**, para restaurar el viernes hacen falta **dos** copias; con **incrementales**, hacen falta **cinco**.
+> **[DATO CLAVE]** La distinción incremental/diferencial: **incremental = desde la última copia** (cadena larga, restauración lenta, poco espacio); **diferencial = desde la última completa** (crece cada día, restauración con solo dos piezas). Y una consecuencia: si el lunes se hace completa y de martes a viernes **diferenciales**, para restaurar el viernes hacen falta **dos** copias; con **incrementales**, hacen falta **cinco**.
 
 > **[EJERCICIO RESUELTO]** *Se hace completa los domingos y copias diarias de lunes a sábado. Los datos son 1.000 GB y cambia un 3 % diario (30 GB), sin solapamiento entre días. Compare el espacio semanal y las piezas de restauración de un jueves.*
 > **Solución.** **Incremental**: 1.000 + (6 × 30) = **1.180 GB**; restaurar el jueves exige la completa del domingo **+ lunes + martes + miércoles + jueves** = **5 piezas**. **Diferencial**: 1.000 + 30 + 60 + 90 + 120 + 150 + 180 = **1.630 GB**; restaurar el jueves exige la completa **+ la diferencial del jueves** = **2 piezas**. Conclusión: la incremental optimiza **ventana y espacio**; la diferencial optimiza **tiempo y fiabilidad de la restauración**. La elección depende de si aprieta más el RTO o la ventana; con un repositorio moderno con deduplicación y **completas sintéticas**, se obtienen las dos ventajas a la vez.
@@ -541,9 +541,9 @@ Variantes complementarias que conviene conocer:
 | **Objetos en nube** | Bajo-medio | Media | No, pero **aislada** de la red interna | **Object Lock** | Copia fuera de la ubicación e inmutable |
 | **Archivo profundo en nube** | **Muy bajo** | Muy baja (horas) | No | Sí | Conservación a muy largo plazo |
 
-> **[DATO CLAVE EXAMEN]** **Copia inmutable y copia fuera de línea no son lo mismo**, aunque ambas cumplan el «1» adicional de la regla 3-2-1-1-0: la **inmutable** está conectada pero no se puede modificar ni borrar durante la retención; la **fuera de línea** (cinta extraída, disco desconectado) es inalcanzable porque **no hay camino** hasta ella. Ambas persiguen el mismo objetivo: que un atacante con credenciales de administrador **no pueda destruir la copia** [S3-LOCK] [NIST-SP800-209].
+> **[DATO CLAVE]** **Copia inmutable y copia fuera de línea no son lo mismo**, aunque ambas cumplan el «1» adicional de la regla 3-2-1-1-0: la **inmutable** está conectada pero no se puede modificar ni borrar durante la retención; la **fuera de línea** (cinta extraída, disco desconectado) es inalcanzable porque **no hay camino** hasta ella. Ambas persiguen el mismo objetivo: que un atacante con credenciales de administrador **no pueda destruir la copia** [S3-LOCK] [NIST-SP800-209].
 
-> **[REFERENCIA CRUZADA]** El **cifrado** de las copias —algoritmos, gestión de claves, firma— corresponde al **Tema 32** (técnicas criptográficas y firma digital), y su transporte seguro entre emplazamientos, a los **Temas 35 y 36**. Aquí basta retener dos reglas: la copia se cifra **en tránsito y en reposo**, y **la clave se custodia fuera del sistema copiado** —una clave que solo existe dentro del sistema perdido convierte la copia en un fichero ilegible—.
+> **[RELACIÓN CON OTROS TEMAS]** El **cifrado** de las copias —algoritmos, gestión de claves, firma— corresponde al **Tema 32** (técnicas criptográficas y firma digital), y su transporte seguro entre emplazamientos, a los **Temas 35 y 36**. Aquí basta retener dos reglas: la copia se cifra **en tránsito y en reposo**, y **la clave se custodia fuera del sistema copiado** —una clave que solo existe dentro del sistema perdido convierte la copia en un fichero ilegible—.
 
 ### 3.3. Sistemas y procedimientos de recuperación
 
@@ -566,7 +566,7 @@ Sobre esa arquitectura se articulan dos decisiones de diseño:
 - **Dónde viajan los datos**: por la LAN corporativa (sencillo, pero compite con el tráfico de los usuarios), **LAN-free** por la SAN (el proxy lee directamente el LUN sin cargar la red IP) o **sin servidor** (*serverless*), delegando la copia en la propia cabina mediante instantáneas.
 - **Cómo se copia una cabina NAS**: con **NDMP**, protocolo específico que permite que la cabina envíe sus datos directamente al destino sin pasar por un servidor intermedio, preservando además sus atributos y permisos [NDMP].
 
-> **[DATO CLAVE EXAMEN]** El **catálogo** del servidor de copia es la pieza más crítica de la arquitectura: contiene el índice de qué hay en cada copia. Debe **copiarse aparte**, y todo plan de recuperación ante desastres tiene que incluir el procedimiento de **reconstruir el servidor de copia y su catálogo** antes de poder restaurar nada más [NIST-SP800-34].
+> **[DATO CLAVE]** El **catálogo** del servidor de copia es la pieza más crítica de la arquitectura: contiene el índice de qué hay en cada copia. Debe **copiarse aparte**, y todo plan de recuperación ante desastres tiene que incluir el procedimiento de **reconstruir el servidor de copia y su catálogo** antes de poder restaurar nada más [NIST-SP800-34].
 
 **Modelo de responsabilidades.** Toda restauración debe estar **autorizada** y registrada: quién la pide, quién la aprueba, sobre qué sistema y con qué alcance. Restaurar es una operación con capacidad de **destruir datos buenos** (sobrescribir producción con una versión antigua) y de **exponer información** (restaurar un buzón ajeno a una carpeta accesible), por lo que el procedimiento de restauración es tan importante como el de copia y debe estar documentado en la política.
 
@@ -580,7 +580,7 @@ Sobre esa arquitectura se articulan dos decisiones de diseño:
 4. **Restauración automatizada en un entorno aislado**: la copia se arranca en una red aislada y se comprueba que el sistema levanta, que el servicio responde y que la base de datos abre. Es el «**0 errores**» de la regla 3-2-1-1-0 [VEEAM-DOC].
 5. **Prueba de restauración real, documentada y cronometrada**: la única que mide el **RTO real** y la que exigen tanto el ENS como el RGPD.
 
-> **[DATO CLAVE EXAMEN]** **Una copia no probada no es una copia.** El ENS exige verificar periódicamente las copias y probar el plan de continuidad; el RGPD, en su **artículo 32.1.d**, exige un proceso de **verificación, evaluación y valoración regulares** de la eficacia de las medidas. La prueba de restauración es, por tanto, una **obligación jurídica**, no una buena práctica opcional [ENS] [RGPD].
+> **[DATO CLAVE]** **Una copia no probada no es una copia.** El ENS exige verificar periódicamente las copias y probar el plan de continuidad; el RGPD, en su **artículo 32.1.d**, exige un proceso de **verificación, evaluación y valoración regulares** de la eficacia de las medidas. La prueba de restauración es, por tanto, una **obligación jurídica**, no una buena práctica opcional [ENS] [RGPD].
 
 **Plan de recuperación ante desastres (DRP).** Es el procedimiento documentado para restablecer los sistemas de información tras un incidente grave. Se distingue del **plan de continuidad del negocio** (BCP), que es más amplio —abarca personas, sedes, procesos y proveedores—: **el DRP es la parte TIC del BCP** [ISO27031] [NIST-SP800-34].
 
@@ -601,7 +601,7 @@ Contenido mínimo de un DRP utilizable:
 - **Copia del propio plan fuera de línea**: un DRP que solo existe en la intranet caída es inútil.
 - **Calendario de pruebas**: desde el ejercicio de mesa (*tabletop*) hasta la conmutación real del servicio al emplazamiento alternativo.
 
-> **[EJEMPLO AYTO MADRID]** Un *ransomware* cifra durante un fin de semana los servidores de ficheros y el gestor de expedientes del CPD municipal. La recuperación aplica el DRP en este orden: (1) **contener** —aislar la red y detener la propagación— y **declarar el desastre**; (2) verificar que la **copia inmutable** de los últimos 30 días no ha sido alterada, y determinar la **fecha del último punto limpio** anterior a la infección, que rara vez es el día del cifrado; (3) reconstruir la **infraestructura base** (directorio, DNS, servidor de copia y su catálogo); (4) restaurar los servicios por orden de criticidad conforme a sus RTO; (5) notificar la **brecha de seguridad** a la AEPD en el plazo de 72 horas si hay datos personales afectados —una pérdida de **disponibilidad** también es una brecha [RGPD] [AEPD]—; (6) documentar el incidente y actualizar el plan con las lecciones aprendidas. El paso (2) es el que explica por qué la retención debe cubrir semanas y no días: **el cifrado se detecta tarde**.
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** Un *ransomware* cifra durante un fin de semana los servidores de ficheros y el gestor de expedientes del CPD municipal. La recuperación aplica el DRP en este orden: (1) **contener** —aislar la red y detener la propagación— y **declarar el desastre**; (2) verificar que la **copia inmutable** de los últimos 30 días no ha sido alterada, y determinar la **fecha del último punto limpio** anterior a la infección, que rara vez es el día del cifrado; (3) reconstruir la **infraestructura base** (directorio, DNS, servidor de copia y su catálogo); (4) restaurar los servicios por orden de criticidad conforme a sus RTO; (5) notificar la **brecha de seguridad** a la AEPD en el plazo de 72 horas si hay datos personales afectados —una pérdida de **disponibilidad** también es una brecha [RGPD] [AEPD]—; (6) documentar el incidente y actualizar el plan con las lecciones aprendidas. El paso (2) es el que explica por qué la retención debe cubrir semanas y no días: **el cifrado se detecta tarde**.
 
 ---
 
@@ -609,7 +609,7 @@ Contenido mínimo de un DRP utilizable:
 
 La virtualización cambió de raíz la forma de hacer copias. En un servidor físico, la única manera de leer los datos es **desde dentro** del propio sistema operativo, con un agente. En un servidor virtual, en cambio, el disco entero es **un fichero** —o un conjunto de ficheros— que el hipervisor puede entregar sin necesidad de entrar en el sistema invitado. De ahí las dos familias de técnicas que estructuran esta sección.
 
-> **[DATO CLAVE EXAMEN]** La diferencia esencial: **en el sistema físico se copia desde dentro** (agente instalado en el sistema operativo); **en el sistema virtual se puede copiar desde fuera** (el software de copia habla con el **hipervisor** y lee el disco virtual sin instalar nada en el invitado). De ahí las expresiones «copia **basada en agente**» y «copia **sin agente**» (*agentless*) [VMW-VADP] [HYPERV-RCT].
+> **[DATO CLAVE]** La diferencia esencial: **en el sistema físico se copia desde dentro** (agente instalado en el sistema operativo); **en el sistema virtual se puede copiar desde fuera** (el software de copia habla con el **hipervisor** y lee el disco virtual sin instalar nada en el invitado). De ahí las expresiones «copia **basada en agente**» y «copia **sin agente**» (*agentless*) [VMW-VADP] [HYPERV-RCT].
 
 ### 4.1. Backup en entornos físicos
 
@@ -643,7 +643,7 @@ tar -czf /repositorio/expedientes-$(date +%F).tar.gz /mnt/snap  # copia desde la
 umount /mnt/snap && lvremove -f /dev/vg_datos/snap_datos        # limpieza
 ```
 
-> **[DATO CLAVE EXAMEN]** El truco universal de la copia en caliente es **copiar desde una instantánea, no desde el sistema vivo**: la instantánea se crea en segundos, congela el estado y libera de inmediato a la aplicación, que sigue trabajando mientras la copia —que puede durar horas— lee de ese punto fijo. Sin instantánea, la copia de un sistema en marcha es **inconsistente por definición** [MS-VSS] [LVM-LINUX].
+> **[DATO CLAVE]** El truco universal de la copia en caliente es **copiar desde una instantánea, no desde el sistema vivo**: la instantánea se crea en segundos, congela el estado y libera de inmediato a la aplicación, que sigue trabajando mientras la copia —que puede durar horas— lee de ese punto fijo. Sin instantánea, la copia de un sistema en marcha es **inconsistente por definición** [MS-VSS] [LVM-LINUX].
 
 Herramientas elementales del entorno físico que conviene reconocer en la parte práctica: `tar` y `cpio` (empaquetado), `rsync` (sincronización incremental por diferencias, con `--link-dest` para copias con enlaces duros), `dd` (copia bloque a bloque, útil para imágenes y sectores de arranque), `robocopy` y `wbadmin` en Windows, `xfsdump`, `dump/restore`, y las herramientas nativas de cada motor de base de datos.
 
@@ -659,14 +659,14 @@ Herramientas elementales del entorno físico que conviene reconocer en la parte 
 4. Restaurar la imagen y, si el hardware no es idéntico, aplicar la **restauración a hardware distinto** (*dissimilar hardware*), que inyecta los controladores de almacenamiento y de red del equipo nuevo —sin ellos, el sistema restaurado **no arranca**—.
 5. Reiniciar, comprobar servicios, reincorporar al dominio si procede y validar la aplicación.
 
-> **[DATO CLAVE EXAMEN]** La **recuperación *bare-metal*** exige tres cosas que se preguntan juntas: una copia **de imagen o volumen** (no de ficheros), un **soporte de arranque** de rescate y, si el hardware destino es distinto del original, la **inyección de controladores** (*dissimilar hardware restore*). Restaurar una copia de ficheros sobre un equipo vacío **no** reconstruye un sistema arrancable [NIST-SP800-34].
+> **[DATO CLAVE]** La **recuperación *bare-metal*** exige tres cosas: una copia **de imagen o volumen** (no de ficheros), un **soporte de arranque** de rescate y, si el hardware destino es distinto del original, la **inyección de controladores** (*dissimilar hardware restore*). Restaurar una copia de ficheros sobre un equipo vacío **no** reconstruye un sistema arrancable [NIST-SP800-34].
 
-Dos técnicas emparentadas y muy preguntadas:
+Dos técnicas emparentadas:
 
 - **P2V** (*Physical to Virtual*): convertir un servidor físico en máquina virtual. La restauración *bare-metal* de una copia de imagen **dentro de una máquina virtual** es, de hecho, una vía habitual de P2V y una excelente estrategia de contingencia: aunque el hardware físico original haya ardido, el servicio puede levantarse en el clúster de virtualización.
 - **V2P** y **V2V**: los caminos inversos y entre hipervisores, de uso mucho menos frecuente.
 
-> **[EJEMPLO AYTO MADRID]** Un servidor físico de un sistema de control de accesos de un edificio municipal, que no puede virtualizarse por depender de una tarjeta específica, se copia con agente y **copia de imagen semanal + incrementales diarios**. Si la placa base muere, el procedimiento es: arrancar el servidor de repuesto con el medio de rescate, restaurar la imagen con inyección de controladores y validar el servicio. Y como contingencia adicional, la misma imagen puede restaurarse **como máquina virtual** en el clúster del CPD mientras llega el repuesto: el servicio se recupera en horas en lugar de en días.
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** Un servidor físico de un sistema de control de accesos de un edificio municipal, que no puede virtualizarse por depender de una tarjeta específica, se copia con agente y **copia de imagen semanal + incrementales diarios**. Si la placa base muere, el procedimiento es: arrancar el servidor de repuesto con el medio de rescate, restaurar la imagen con inyección de controladores y validar el servicio. Y como contingencia adicional, la misma imagen puede restaurarse **como máquina virtual** en el clúster del CPD mientras llega el repuesto: el servicio se recupera en horas en lugar de en días.
 
 ### 4.2. Backup en entornos virtuales
 
@@ -702,7 +702,7 @@ Ventajas de la copia sin agente frente a la copia con agente:
 | **Restauración** | De ficheros; la del sistema exige BMR | VM completa **en minutos**, y también granular |
 | **Cobertura** | Cualquier sistema, físico o virtual | Solo máquinas virtuales soportadas por el hipervisor |
 
-> **[DATO CLAVE EXAMEN]** La copia sin agente **no elimina la necesidad de consistencia de aplicación**: el hipervisor sigue apoyándose en **VSS dentro del invitado** (a través de las herramientas de invitado) para que una base de datos quede coherente. Copiar una máquina virtual con la aplicación en marcha **sin** esa coordinación produce una copia *crash-consistent*, que puede restaurar mal una base de datos [VMW-VADP] [MS-VSS].
+> **[DATO CLAVE]** La copia sin agente **no elimina la necesidad de consistencia de aplicación**: el hipervisor sigue apoyándose en **VSS dentro del invitado** (a través de las herramientas de invitado) para que una base de datos quede coherente. Copiar una máquina virtual con la aplicación en marcha **sin** esa coordinación produce una copia *crash-consistent*, que puede restaurar mal una base de datos [VMW-VADP] [MS-VSS].
 
 Aun así, el agente **no desaparece** del entorno virtual: se sigue empleando para bases de datos que exigen tratamiento propio (copias de registros de transacciones cada pocos minutos, restauración a un instante concreto), para máquinas virtuales en la nube de terceros, para servidores con volúmenes muy grandes accedidos por iniciador iSCSI desde el propio invitado, y para puestos de trabajo.
 
@@ -724,11 +724,11 @@ Conviene no confundir tres instantáneas distintas que aparecen en el mismo ento
 | **De cabina o de volumen** (LUN, LVM) | En la cabina o el volumen | Recuperación rápida de un volumen entero; copia consistente | Depende del volumen original |
 | **De sistema de ficheros** (ZFS, Btrfs, Volume Shadow Copies) | En el propio sistema de ficheros | Autoservicio: «versiones anteriores» de un fichero | Depende del sistema de ficheros |
 
-> **[DATO CLAVE EXAMEN]** **Snapshot ≠ backup.** La instantánea es **dependiente del original y local**; la copia de seguridad es **independiente y está en otro sitio**. Una instantánea sirve para deshacer un cambio en minutos; no sirve frente al fallo de la cabina, el incendio de la sala ni el *ransomware* que cifra el almacén de datos entero [VMW-SNAP] [ISO27002].
+> **[DATO CLAVE]** **Snapshot ≠ backup.** La instantánea es **dependiente del original y local**; la copia de seguridad es **independiente y está en otro sitio**. Una instantánea sirve para deshacer un cambio en minutos; no sirve frente al fallo de la cabina, el incendio de la sala ni el *ransomware* que cifra el almacén de datos entero [VMW-SNAP] [ISO27002].
 
 **Seguimiento de bloques modificados (CBT).** *Changed Block Tracking* es la funcionalidad del hipervisor que **registra qué bloques del disco virtual han cambiado** desde un punto dado. El software de copia, en lugar de leer los 200 GB del disco virtual para averiguar qué ha cambiado, le pregunta al hipervisor y **lee únicamente los bloques modificados** [VMW-VADP]. Su equivalente en Hyper-V es **RCT** (*Resilient Change Tracking*) [HYPERV-RCT].
 
-Consecuencias, todas relevantes para el examen:
+Consecuencias relevantes:
 
 - La **ventana de copia se desploma**: un incremental que exigía horas pasa a durar minutos.
 - Hace **viable el modelo incremental para siempre** con completas sintéticas (§3.2.1) en entornos grandes.
@@ -755,7 +755,7 @@ Modalidades según el compromiso de RPO:
 - **Asíncrona**: la escritura se confirma en origen y se envía al destino con retardo. **RPO de minutos**, sin límite práctico de distancia. Es la opción habitual entre dos CPD de una misma ciudad o región.
 - **Periódica** (basada en instantáneas o en el propio motor de copia): se envían los bloques cambiados cada *n* minutos. RPO de decenas de minutos, coste moderado.
 
-> **[DATO CLAVE EXAMEN]** **Réplica y copia de seguridad son complementarias, no alternativas.** La réplica da **RTO bajo** pero **replica la corrupción y el cifrado** casi al instante y guarda pocos puntos en el tiempo; la copia de seguridad da **profundidad histórica** y protección frente al contenido erróneo, pero exige tiempo de restauración. Una arquitectura correcta tiene **las dos** [NIST-SP800-34].
+> **[DATO CLAVE]** **Réplica y copia de seguridad son complementarias, no alternativas.** La réplica da **RTO bajo** pero **replica la corrupción y el cifrado** casi al instante y guarda pocos puntos en el tiempo; la copia de seguridad da **profundidad histórica** y protección frente al contenido erróneo, pero exige tiempo de restauración. Una arquitectura correcta tiene **las dos** [NIST-SP800-34].
 
 **Recuperación granular.** La contrapartida de copiar la máquina virtual entera sería tener que restaurarla entera para recuperar un solo fichero. Los productos modernos lo evitan con tres capacidades:
 
@@ -765,9 +765,9 @@ Modalidades según el compromiso de RPO:
 
 También conviene mencionar el **laboratorio aislado de verificación**: un entorno de red cerrado en el que las máquinas restauradas se arrancan automáticamente para comprobar que el sistema levanta y el servicio responde, sin interferir con producción. Es la implementación práctica del «0» de la regla 3-2-1-1-0 (§3.1.2) [VEEAM-DOC].
 
-> **[EJEMPLO AYTO MADRID]** Combinación coherente para el CPD municipal: (a) **copias** de todas las máquinas virtuales al repositorio de disco con CBT e incremental para siempre, con retención GFS y copia inmutable en objetos; (b) **réplicas** al segundo CPD **solo** de las 12 máquinas virtuales de la sede electrónica y del Padrón, con RPO de 15 minutos; (c) **restauración instantánea** como procedimiento estándar ante la pérdida de una máquina virtual concreta; (d) **recuperación granular** para el caso frecuentísimo de «he borrado un documento del expediente», que se resuelve en minutos sin tocar la máquina. Obsérvese la lógica económica: la réplica, que es cara, se reserva para lo que tiene un RTO de minutos; el resto se cubre con copias, que son baratas y profundas.
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** Combinación coherente para el CPD municipal: (a) **copias** de todas las máquinas virtuales al repositorio de disco con CBT e incremental para siempre, con retención GFS y copia inmutable en objetos; (b) **réplicas** al segundo CPD **solo** de las 12 máquinas virtuales de la sede electrónica y del Padrón, con RPO de 15 minutos; (c) **restauración instantánea** como procedimiento estándar ante la pérdida de una máquina virtual concreta; (d) **recuperación granular** para el caso frecuentísimo de «he borrado un documento del expediente», que se resuelve en minutos sin tocar la máquina. Obsérvese la lógica económica: la réplica, que es cara, se reserva para lo que tiene un RTO de minutos; el resto se cubre con copias, que son baratas y profundas.
 
-> **[REFERENCIA CRUZADA]** La **gestión de incidencias** que activa estos procedimientos —registro, clasificación, escalado y resolución— corresponde al **Tema 29**, y el **control remoto del puesto de usuario** implicado en muchas restauraciones, al mismo tema. La protección de la **información del puesto de usuario final** (confidencialidad y disponibilidad en el equipo del empleado, copias del puesto) se trata en el **Tema 25**.
+> **[RELACIÓN CON OTROS TEMAS]** La **gestión de incidencias** que activa estos procedimientos —registro, clasificación, escalado y resolución— corresponde al **Tema 29**, y el **control remoto del puesto de usuario** implicado en muchas restauraciones, al mismo tema. La protección de la **información del puesto de usuario final** (confidencialidad y disponibilidad en el equipo del empleado, copias del puesto) se trata en el **Tema 25**.
 
 ---
 
@@ -788,7 +788,7 @@ Sus elementos estructurales, en lo que afecta a este tema:
 - **Anexo II — medidas de seguridad**, organizadas en tres marcos: **organizativo** (`org`), **operacional** (`op`) y **medidas de protección** (`mp`).
 - **Auditoría** de conformidad, con periodicidad ordinaria de dos años para las categorías media y alta, y **declaración o certificación de conformidad** publicada.
 
-> **[REFERENCIA CRUZADA]** Los **principios básicos y requisitos mínimos del ENS y del ENI** en su conjunto —análisis de riesgos, política de seguridad, categorización, interoperabilidad, normas técnicas— son objeto específico del **Tema 39**. Aquí se estudian solo las medidas **relativas a copias de seguridad y continuidad**. Los conceptos de seguridad de los sistemas (amenazas, criptografía, firma) corresponden al **Tema 32**.
+> **[RELACIÓN CON OTROS TEMAS]** Los **principios básicos y requisitos mínimos del ENS y del ENI** en su conjunto —análisis de riesgos, política de seguridad, categorización, interoperabilidad, normas técnicas— son objeto específico del **Tema 39**. Aquí se estudian solo las medidas **relativas a copias de seguridad y continuidad**. Los conceptos de seguridad de los sistemas (amenazas, criptografía, firma) corresponden al **Tema 32**.
 
 #### 5.1.1. Medidas relativas a copias de seguridad y continuidad de la información
 
@@ -815,7 +815,7 @@ Ese mandato se despliega en el Anexo II en dos bloques de medidas:
 
 Otras medidas del Anexo II que inciden directamente en el respaldo: `[op.exp.8]` **registro de la actividad** (los trabajos de copia y las restauraciones dejan traza), `[mp.si]` **protección de los soportes de información** —etiquetado, cifrado, custodia, transporte y **borrado y destrucción** al final de su vida, en línea con las pautas del NIST [NIST-SP800-88]—, `[mp.if]` protección de las **instalaciones**, y `[op.ext]` control de los **servicios prestados por terceros**, aplicable cuando la copia se externaliza a un proveedor de nube.
 
-> **[DATO CLAVE EXAMEN]** Los cuatro anclajes del ENS en materia de copias: **artículo 26** (continuidad de la actividad), medida **`[mp.info.6]` Copias de seguridad**, grupo **`[op.cont]`** (análisis de impacto, plan de continuidad, pruebas periódicas y medios alternativos) y la regla de que **la copia debe protegerse con el mismo nivel de seguridad que el dato original**. Y una exigencia que se pregunta a menudo: en categoría **ALTA** hay que **probar el plan de continuidad**, no basta con tenerlo escrito [ENS].
+> **[DATO CLAVE]** Los cuatro anclajes del ENS en materia de copias: **artículo 26** (continuidad de la actividad), medida **`[mp.info.6]` Copias de seguridad**, grupo **`[op.cont]`** (análisis de impacto, plan de continuidad, pruebas periódicas y medios alternativos) y la regla de que **la copia debe protegerse con el mismo nivel de seguridad que el dato original**. Y una exigencia importante: en categoría **ALTA** hay que **probar el plan de continuidad**, no basta con tenerlo escrito [ENS].
 
 **Conservación del documento electrónico.** La copia de seguridad **no sustituye al archivo**: son funciones distintas. El **artículo 17 de la Ley 39/2015** obliga a que cada Administración mantenga un **archivo electrónico único** de los documentos correspondientes a procedimientos finalizados, asegurando su **autenticidad, integridad y conservación**, así como su **consulta** con independencia del tiempo transcurrido [LEY39-2015]. El **ENI** y sus Normas Técnicas de Interoperabilidad concretan la **política de gestión de documentos electrónicos**, los formatos admisibles para la conservación a largo plazo y el tratamiento de la **firma electrónica** cuando sus certificados caducan —de ahí los sellos de tiempo y las firmas longevas— [ENI].
 
@@ -827,7 +827,7 @@ Otras medidas del Anexo II que inciden directamente en el respaldo: `[op.exp.8]`
 | **Formato** | Propietario del software de copia | Formatos **normalizados** de conservación (ENI) |
 | **Acceso** | Restauración por personal técnico | **Consulta** por interesados y por la propia Administración |
 
-> **[DATO CLAVE EXAMEN]** Una pregunta clásica con trampa: **las copias de seguridad no cumplen la obligación de archivo electrónico**. Están en formato propietario, tienen retención limitada, no conservan metadatos ni firmas de forma consultable y no garantizan el acceso «con independencia del tiempo transcurrido». Son mecanismos **complementarios**: la copia protege el sistema; el archivo, el documento [LEY39-2015] [ENI].
+> **[DATO CLAVE]** Un matiz importante: **las copias de seguridad no cumplen la obligación de archivo electrónico**. Están en formato propietario, tienen retención limitada, no conservan metadatos ni firmas de forma consultable y no garantizan el acceso «con independencia del tiempo transcurrido». Son mecanismos **complementarios**: la copia protege el sistema; el archivo, el documento [LEY39-2015] [ENI].
 
 ### 5.2. Protección de datos personales (RGPD y LOPDGDD)
 
@@ -840,7 +840,7 @@ El **artículo 32 del RGPD** («Seguridad del tratamiento») es la norma que con
 - **Art. 32.1.d** — un proceso de **verificación, evaluación y valoración regulares** de la eficacia de las medidas. Es decir: **pruebas de restauración periódicas**.
 - **Art. 32.1.a** — la **seudonimización y el cifrado**, aplicables también a las copias, especialmente a las que salen de las instalaciones.
 
-Cuatro consecuencias prácticas, todas preguntables:
+Cuatro consecuencias prácticas:
 
 **1. La copia contiene datos personales y por tanto hereda todo el régimen.** Base jurídica, medidas de seguridad, control de accesos, cifrado, registro de actividades y —si se externaliza— **contrato de encargo del tratamiento** (art. 28), con sus garantías, y las reglas de **transferencia internacional** si el proveedor almacena o accede desde fuera del Espacio Económico Europeo (arts. 44 y siguientes) [RGPD].
 
@@ -848,16 +848,16 @@ Cuatro consecuencias prácticas, todas preguntables:
 
 **3. Limitación del plazo de conservación (art. 5.1.e).** Las copias tampoco pueden guardarse indefinidamente: la retención debe estar **justificada y documentada**, y su vencimiento debe ejecutarse con **destrucción segura** del soporte [RGPD] [NIST-SP800-88].
 
-**4. El derecho de supresión frente a las copias de seguridad (art. 17).** Es el punto más delicado y el que más se pregunta. Borrar quirúrgicamente un dato dentro de una copia consolidada es técnicamente inviable —y a menudo destruiría su integridad—. El criterio consolidado, alineado con la doctrina de la AEPD y con el **artículo 32 de la LOPDGDD** (bloqueo de los datos), es el siguiente [AEPD] [LOPDGDD]:
+**4. El derecho de supresión frente a las copias de seguridad (art. 17).** Es el punto más delicado. Borrar quirúrgicamente un dato dentro de una copia consolidada es técnicamente inviable —y a menudo destruiría su integridad—. El criterio consolidado, alineado con la doctrina de la AEPD y con el **artículo 32 de la LOPDGDD** (bloqueo de los datos), es el siguiente [AEPD] [LOPDGDD]:
 
 - Se **suprime el dato en los sistemas en producción** de forma inmediata.
 - Respecto de las copias de seguridad, el tratamiento queda **bloqueado**: los datos se conservan solo a efectos de responsabilidades y no se usan para ninguna otra finalidad.
 - Si por cualquier motivo hay que **restaurar** una copia anterior a la supresión, la organización debe **volver a aplicar** la supresión sobre el sistema restaurado. Ese procedimiento debe estar **documentado**.
 - La supresión efectiva en las copias se produce cuando la copia **vence** conforme a la política de retención.
 
-> **[DATO CLAVE EXAMEN]** Del RGPD hay que retener el **artículo 32**: **disponibilidad y resiliencia permanentes**, **capacidad de restaurar rápidamente** el acceso a los datos y **verificación regular** de la eficacia. Y la regla operativa del derecho de supresión: no se edita la copia; se **suprime en producción**, se **bloquea** en las copias y se **vuelve a suprimir si se restaura**, hasta que la copia vence [RGPD] [LOPDGDD] [AEPD].
+> **[DATO CLAVE]** Del RGPD hay que retener el **artículo 32**: **disponibilidad y resiliencia permanentes**, **capacidad de restaurar rápidamente** el acceso a los datos y **verificación regular** de la eficacia. Y la regla operativa del derecho de supresión: no se edita la copia; se **suprime en producción**, se **bloquea** en las copias y se **vuelve a suprimir si se restaura**, hasta que la copia vence [RGPD] [LOPDGDD] [AEPD].
 
-> **[EJEMPLO AYTO MADRID]** Un vecino ejerce su derecho de supresión sobre unos datos de un procedimiento ya finalizado. El Ayuntamiento (a) valora si procede, ya que frente a una obligación legal de conservación —o frente al **archivo electrónico** del artículo 17 de la Ley 39/2015— el derecho de supresión **cede**; (b) si procede, suprime el dato en producción; (c) **no** manipula las copias, pero deja registrado que, en caso de restauración de una copia anterior a la fecha, deberá reaplicarse la supresión; (d) los datos quedan **bloqueados** en las copias hasta su vencimiento. La respuesta al interesado debe explicar exactamente esto: la copia de seguridad no es un limbo donde el derecho desaparece, pero tampoco un fichero editable.
+> **[EJEMPLO DE APLICACIÓN EN EL AYTO]** Un vecino ejerce su derecho de supresión sobre unos datos de un procedimiento ya finalizado. El Ayuntamiento (a) valora si procede, ya que frente a una obligación legal de conservación —o frente al **archivo electrónico** del artículo 17 de la Ley 39/2015— el derecho de supresión **cede**; (b) si procede, suprime el dato en producción; (c) **no** manipula las copias, pero deja registrado que, en caso de restauración de una copia anterior a la fecha, deberá reaplicarse la supresión; (d) los datos quedan **bloqueados** en las copias hasta su vencimiento. La respuesta al interesado debe explicar exactamente esto: la copia de seguridad no es un limbo donde el derecho desaparece, pero tampoco un fichero editable.
 
 > **[EJERCICIO RESUELTO]** *Un servicio municipal contrata a un proveedor externo la custodia de sus copias de seguridad en la nube. Enumere los cuatro requisitos jurídico-técnicos que hay que exigir.*
 > **Solución.** (1) **Contrato de encargo del tratamiento** conforme al art. 28 del RGPD, con instrucciones documentadas, deber de confidencialidad, medidas del art. 32, régimen de subencargados y devolución o supresión al terminar. (2) **Ubicación de los datos y régimen de transferencias**: almacenamiento en el EEE o, en su defecto, garantías adecuadas de los arts. 44 y siguientes; conviene exigir contractualmente la ubicación. (3) **Conformidad con el ENS** del proveedor y del servicio prestado, con la categoría que corresponda, en aplicación de la medida `[op.ext]` de servicios prestados por terceros. (4) **Control técnico efectivo**: **cifrado en origen** con claves **custodiadas por el Ayuntamiento** —de modo que el proveedor no pueda leer el contenido—, **inmutabilidad** de las copias, evidencia periódica de **pruebas de restauración** y cláusulas de **reversibilidad** que garanticen la recuperación de los datos en formato utilizable al terminar el contrato. Añadir, como buena práctica, que la copia en la nube **no sea la única**: la regla 3-2-1 sigue aplicándose.

@@ -25,7 +25,7 @@
 
 - [ ] El nivel de profundidad (5 secciones, 32 epígrafes, ~17.600 palabras medidas con `wc -w`) es adecuado para C1 (¿hay que ampliar o recortar alguna sección?)
 - [ ] La distinción **SAN = bloque / NAS = fichero**, con el criterio de «quién pone el sistema de ficheros», queda suficientemente nítida: es el núcleo conceptual de la primera mitad del tema
-- [ ] La distinción **incremental / diferencial** y la de **RPO / RTO** quedan inequívocas: son las dos preguntas más recurrentes de la segunda mitad
+- [ ] La distinción **incremental / diferencial** y la de **RPO / RTO** quedan inequívocas: son las dos distinciones centrales de la segunda mitad
 - [ ] Las cifras de RAID (capacidad útil n−1 y n−2, penalización de escritura 4 y 6 operaciones) y los puertos (3260, 2049, 445) son correctos
 - [ ] La afirmación reiterada de que **RAID ≠ backup**, **snapshot ≠ backup** y **alta disponibilidad ≠ backup** está bien graduada y no resulta repetitiva en exceso
 - [ ] Los bloques añadidos más allá del enunciado literal del esqueleto (medios físicos y cinta LTO, NVMe-oF, niveles de consistencia, VSS y LVM, modos de transporte, arquitectura del software de copia, tipos de emplazamiento alternativo, archivo electrónico) aportan valor y no desbordan el nivel C1
@@ -82,4 +82,3 @@ _(Espacio para anotaciones de María, Ana y la revisión IAM.)_
 - Pendiente confirmar con el IAM si interesa **ampliar la parte normativa** (§5) con el detalle de las medidas del ENS relacionadas con soportes de información (`[mp.si]`) y servicios externos (`[op.ext]`), o si el nivel actual es el adecuado dada la existencia del Tema 39.
 - Pendiente decidir si conviene **desarrollar el cálculo económico** del almacenamiento (coste por terabyte por soporte, coste de salida de datos en la nube), que en la parte práctica del examen podría aparecer como problema numérico.
 - Este tema comparte frontera especialmente estrecha con el **Tema 28** (virtualización de sistemas y de puestos) y con el **Tema 12** (elementos de almacenamiento): conviene revisar los tres en conjunto cuando estén los tres publicados, para evitar solapamientos y, sobre todo, huecos.
-- **Nota de secuencia**: el esqueleto `Test_Prompting/temas agosto/25.md` (Tema 25 — accesibilidad, diseño universal, usabilidad y seguridad en el desarrollo) sigue **sin desarrollar**; con este tema, la serie técnica queda T11-T24 y T26, con el hueco de T25.

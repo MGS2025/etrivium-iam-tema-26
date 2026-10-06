@@ -59,7 +59,7 @@
 | DAS | Almacenamiento **conectado directamente** a un único servidor por un bus (SAS, SATA, NVMe): sin red de por medio, no se comparte y el sistema de ficheros lo gestiona el servidor |
 | NAS | Cabina que sirve **ficheros** por la red IP con NFS o SMB: **el sistema de ficheros vive en la cabina**, y el cliente ve carpetas y ficheros |
 | SAN | Red dedicada que sirve **bloques** (LUN) por Fibre Channel, iSCSI o NVMe-oF: **el sistema de ficheros lo pone el servidor**, que ve el LUN como si fuera un disco propio |
-| Regla mnemotécnica NAS/SAN | **NAS = fichero** (carpeta compartida) · **SAN = bloque** (disco en bruto). Es la distinción que más se pregunta |
+| Regla mnemotécnica NAS/SAN | **NAS = fichero** (carpeta compartida) · **SAN = bloque** (disco en bruto). Es la distinción central |
 | Almacenamiento de objetos | Espacio de nombres **plano** (contenedores/*buckets*), objeto = dato + **metadatos** + identificador único, acceso por **API REST sobre HTTP**; ideal para archivo y copias, no para bases de datos transaccionales |
 | LUN | *Logical Unit Number*: unidad lógica de bloque que una cabina presenta a un servidor; es la unidad de aprovisionamiento en una SAN |
 | iSCSI | Comandos SCSI encapsulados en **TCP/IP**, puerto **3260**, nombres **IQN**, autenticación **CHAP**. SAN sobre red Ethernet convencional |

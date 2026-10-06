@@ -106,7 +106,7 @@
 ## D3 · Protocolos de almacenamiento, transporte y puertos
 
 **Sección**: §1.2.1 — Protocolos de acceso a bloque y archivo
-**Propósito**: Reunir en una sola imagen los protocolos, su tipo de acceso, su transporte y los identificadores y puertos que se preguntan en examen.
+**Propósito**: Reunir en una sola imagen los protocolos, su tipo de acceso, su transporte y los identificadores y puertos clave.
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 340" role="img" aria-label="Tabla visual de protocolos de almacenamiento: Fibre Channel, FCoE, iSCSI, NVMe over Fabrics, NFS, SMB y HTTP para objetos, con su tipo de acceso, transporte, puerto o identificador y nota característica">
@@ -145,7 +145,7 @@
   <rect x="288" y="226" width="180" height="24" rx="3" fill="#eef3f8"/><text x="298" y="242" class="d3">TCP/IP · REST</text>
   <rect x="472" y="226" width="188" height="24" rx="3" fill="#e89822"/><text x="482" y="242" class="s3">443 · versionado · WORM</text>
   <rect x="20" y="262" width="640" height="30" rx="5" fill="none" stroke="#0055a0" stroke-width="2"/>
-  <text x="340" y="281" text-anchor="middle" class="k3">Los cuatro números de examen: iSCSI 3260 · NFS 2049 · SMB 445 · objeto 443 (HTTPS)</text>
+  <text x="340" y="281" text-anchor="middle" class="k3">Los cuatro números clave: iSCSI 3260 · NFS 2049 · SMB 445 · objeto 443 (HTTPS)</text>
   <text x="340" y="312" text-anchor="middle" class="d3">Identificadores: IQN en iSCSI · WWN en Fibre Channel · NQN en NVMe over Fabrics</text>
   <text x="670" y="332" text-anchor="end" style="font:9px system-ui;fill:#666">[Fuente: RFC7143; T11-FC; RFC8881; MS-SMB2; NVME-OF]</text>
 </svg>
@@ -156,7 +156,7 @@
 ## D4 · Niveles RAID: distribución, capacidad útil y tolerancia
 
 **Sección**: §1.2.2 — Niveles RAID y técnicas de optimización
-**Propósito**: Visualizar cómo se reparten datos y paridad en cada nivel y fijar las dos cifras que se preguntan: capacidad útil y número de discos que se toleran.
+**Propósito**: Visualizar cómo se reparten datos y paridad en cada nivel y fijar las dos cifras clave: capacidad útil y número de discos que se toleran.
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 370" role="img" aria-label="Esquema de los niveles RAID 0, 1, 5, 6 y 10, mostrando el reparto de datos y paridad entre discos, la capacidad útil y el número de discos cuyo fallo se tolera en cada nivel">
@@ -431,7 +431,7 @@
 ## D11 · Completa, incremental, diferencial y sintética
 
 **Sección**: §3.2.1 — Tipos de copia
-**Propósito**: Hacer visual la diferencia que más se pregunta: qué copia cada tipo y cuántas piezas hacen falta para restaurar.
+**Propósito**: Hacer visual la diferencia central: qué copia cada tipo y cuántas piezas hacen falta para restaurar.
 
 ```svg
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 370" role="img" aria-label="Comparación de los tipos de copia a lo largo de una semana: completa el domingo y después incrementales, diferenciales o sintéticas, indicando cuántas piezas se necesitan para restaurar el jueves">
